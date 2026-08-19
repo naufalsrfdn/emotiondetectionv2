@@ -1,0 +1,11 @@
+streamlit
+torch
+transformers
+huggingface_hub
+pandas
+plotly
+datasets
+scikit-learn
+seaborn
+youtube-comment-downloader
+safetensors

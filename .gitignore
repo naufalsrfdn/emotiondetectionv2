@@ -1,0 +1,38 @@
+# ==========================================
+# GITHUB IGNORE RULES FOR EMOTION DETECTION
+# ==========================================
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+
+# Python Cache & Bytecode
+__pycache__/
+pages/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Model Files & Large Weights
+model/
+model_versions/v*
+model_new/
+checkpoint-*/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Operating System & IDE
+.DS_Store
+.vscode/
+.idea/
+*.log
