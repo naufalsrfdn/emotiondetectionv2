@@ -2,11 +2,10 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)](https://streamlit.io/)
-[![HuggingFace](https://img.shields.io/badge/Hugging%20Face-Transformers-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/naufalsrfdn/indobert-emotion)
 [![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 
-Aplikasi web interaktif untuk analisis sentimen & **deteksi emosi multikategori** pada komentar video YouTube bahasa Indonesia. Sistem ini dikembangkan menggunakan model Transformer **IndoBERT** (`naufalsrfdn/indobert-emotion`), terintegrasi dengan antarmuka **Streamlit**, database **SQLite**, serta mendukung mekanisme **Incremental Learning** (pelatihan ulang berbasis validasi manusia).
+Aplikasi web interaktif untuk analisis sentimen & **deteksi emosi multikategori** pada komentar video YouTube bahasa Indonesia. Sistem ini dikembangkan menggunakan model Transformer **IndoBERT** (`naufalsrfdn/indobert-emotion`), terintegrasi dengan antarmuka **Streamlit**, database **SQLite**, serta mendukung mekanisme **Incremental Learning** (pelatihan ulang berbasis validasi manusia) secara **100% lokal (offline)**.
 
 Aplikasi ini dibangun sebagai produk akhir dari penelitian Skripsi Program Studi Informatika, Fakultas Sains dan Teknologi, Universitas PGRI Yogyakarta.
 
@@ -26,20 +25,23 @@ Aplikasi ini dibangun sebagai produk akhir dari penelitian Skripsi Program Studi
 
 1. **📝 Real-time Emotion Prediction (`app.py`)**
    - Mengklasifikasikan ekspresi emosi pada teks komentar yang dimasukkan secara manual oleh pengguna.
-   - Menampilkan label emosi terdeteksi beserta nilai probabilitas/kepercayaan (*confidence score*).
+   - **Pemilih Versi Model (Model Selector)**: Pengguna dapat memilih versi model lokal mana saja (`v1`, `v2`, dll) yang ingin digunakan.
+   - Menampilkan label emosi terdeteksi, lencana warna emosi (*emotion badges*), serta rincian probabilitas 6 emosi secara visual.
    - Menyimpan hasil prediksi secara otomatis ke database SQLite.
 
 2. **📥 YouTube Comment Scraper + Auto Classification (`pages/2_Scraping_YouTube.py`)**
    - Pengambilan komentar otomatis dari platform YouTube (Mode Studi Kasus Preset / Link YouTube Bebas).
    - Fitur filter berdasarkan rentang tanggal dan limit jumlah komentar.
+   - Mendukung pemilihan versi model lokal sebelum scraping.
    - Menggabungkan alur Scraping $\rightarrow$ Prediksi Emosi IndoBERT $\rightarrow$ Auto Save ke Database.
 
 3. **📊 Dashboard Analisis Emosi (`pages/1_Dashboard_Analisis.py`)**
-   - Visualisasi interaktif menggunakan **Plotly Express**.
-   - Menampilkan statistik total data, grafik batang distribusi emosi prediksi model, grafik distribusi label validasi manusia (*human label*), serta *pie chart* perbandingan akurasi validasi (*Benar vs Salah*).
+   - Visualisasi interaktif menggunakan **Plotly Express** dengan skema warna emosi terintegrasi.
+   - Menampilkan statistik total data dalam *Metric Cards*, grafik batang distribusi emosi prediksi model, grafik distribusi label validasi manusia (*human label*), serta *pie chart* perbandingan akurasi validasi (*Benar vs Salah*).
 
 4. **📚 History & Log Management (`pages/3_History.py`)**
-   - Menampilkan seluruh riwayat komentar, hasil prediksi, *confidence score*, tanggal pembuatan, dan label validasi dalam bentuk tabel interaktif (`st.dataframe`).
+   - Menampilkan seluruh riwayat komentar, hasil prediksi, *confidence score*, tanggal pembuatan, dan label validasi dalam bentuk tabel interaktif.
+   - Dilengkapi fitur pencarian kata kunci dan filter kategori emosi.
 
 5. **📝 Validasi Label Emosi / Human Correction (`pages/4_Validasi.py`)**
    - Sistem *Human-in-the-loop* (dilindungi sistem login autentikasi password).
@@ -47,8 +49,8 @@ Aplikasi ini dibangun sebagai produk akhir dari penelitian Skripsi Program Studi
    - Mendukung validasi per komentar maupun simpan validasi massal (*batch update*).
 
 6. **🔁 Incremental Learning / Training Ulang Model (`pages/5_Training_Ulang_Model.py`)**
-   - Pelatihan ulang (*fine-tuning*) model IndoBERT berbasis data validasi manusia terbaru.
-   - Menggunakan PyTorch & Hugging Face `Trainer`.
+   - Pelatihan ulang (*fine-tuning*) model IndoBERT secara **100% lokal** berbasis data validasi manusia terbaru.
+   - **Pencegahan Kunci Versi**: Secara otomatis menggunakan versi model lokal **terbaru** sebagai dasar pelatihan ulang.
    - Menggenerasi versi model baru (contoh: `v1`, `v2`, `v3`) secara otomatis di folder `model_versions/`.
    - Menyajikan metrik evaluasi (*Accuracy*, *Precision*, *Recall*, *F1-Score*) dan visualisasi *Confusion Matrix* (Seaborn/Matplotlib).
 
@@ -58,14 +60,14 @@ Aplikasi ini dibangun sebagai produk akhir dari penelitian Skripsi Program Studi
 
 Sistem mengklasifikasikan teks ke dalam 6 kategori emosi utama:
 
-| Label Emosi | Keterangan | Contoh Teks Komentar |
-| :--- | :--- | :--- |
-| **Marah** | Kesal, benci, atau tidak setuju | *"Terus gimana? Coba lu jelasin, jgn nyocot doang"* |
-| **Sedih** | Kehilangan, kecewa, empati | *"Ferry di pojokin terus. Bahkan host juga pojokin ferry. Kasihan."* |
-| **Senang** | Kebahagiaan, kepuasan, apresiasi | *"Diskusi mantulll"* |
-| **Takut** | Ancaman, bahaya, kekhawatiran | *"Indonesia hancur karna di adudomba"* |
-| **Terkejut** | Kejadian tak terduga / mengejutkan | *"Daginggg semuaa gelooo"* |
-| **Netral (Biasa)** | Tidak menunjukkan emosi signifikan | *"Banyakk yang dipotong videonyaa"* |
+| Label Emosi | Warna Badge | Keterangan | Contoh Teks Komentar |
+| :--- | :---: | :--- | :--- |
+| **Marah** | 🔴 Merah | Kesal, benci, atau tidak setuju | *"Terus gimana? Coba lu jelasin, jgn nyocot doang"* |
+| **Sedih** | 🔵 Biru | Kehilangan, kecewa, empati | *"Ferry di pojokin terus. Bahkan host juga pojokin ferry. Kasihan."* |
+| **Senang** | 🟢 Hijau | Kebahagiaan, kepuasan, apresiasi | *"Diskusi mantulll"* |
+| **Takut** | 🟣 Ungu | Ancaman, bahaya, kekhawatiran | *"Indonesia hancur karna di adudomba"* |
+| **Terkejut** | 🟠 Kuning/Oranye | Kejadian tak terduga / mengejutkan | *"Daginggg semuaa gelooo"* |
+| **Netral (Biasa)** | ⚪ Abu-abu | Tidak menunjukkan emosi signifikan | *"Banyakk yang dipotong videonyaa"* |
 
 ---
 
@@ -88,17 +90,17 @@ Model `indobenchmark/IndoBERT-base-p1` di-fine-tune menggunakan 3 skenario pemba
 ```text
 emotiondetectionv2/
 ├── app.py                      # Application Entry Point (Home / Single Prediction)
-├── load_model.py               # Model caching & loader dari Hugging Face Hub
-├── auth.py                     # Authentikasi password session state
+├── load_model.py               # Loader model IndoBERT 100% lokal (offline)
+├── ui_components.py            # Design System (Glassmorphism, Emotion Badges, Header)
+├── auth.py                     # Authentikasi password admin session state
 ├── db.py                       # Helper & koneksi SQLite Database (emotion.db)
 ├── emotion.db                  # Database SQLite penampung hasil prediksi & validasi
 ├── requirements.txt            # Package dependencies
-├── convert_safetensors.py      # Script konversi format model
-├── train_finetune.py           # Script standalone pelatihan ulang model
-├── upload_model.py             # Script unggah versi model ke Hugging Face Hub
-├── test_db.py / test_model.py  # Unit testing database & model
-├── model_versions/             # Direktori direktori versi model lokal (v1, v2, dll.)
-│   └── active.txt              # Menyimpan penanda versi model aktif
+├── .gitignore                  # Aturan ignore file model berat & cache Git
+├── .github/                    # Konfigurasi repositori GitHub
+├── model_versions/             # Direktori penampung versi model lokal (v1, v2, dll.)
+│   ├── active.txt              # Penanda versi model aktif saat ini
+│   └── v1/                     # Folder bobot & konfigurasi model versi 1
 ├── pages/                      # Multi-page Streamlit routes
 │   ├── 1_Dashboard_Analisis.py # Dashboard visualisasi & statistik Plotly
 │   ├── 2_Scraping_YouTube.py   # Web Scraper komentar YouTube + Auto Predict
@@ -134,22 +136,23 @@ CREATE TABLE IF NOT EXISTS hasil_prediksi (
 - **Git** & **Pip** terinstall.
 
 ### 2. Kloning & Persiapan Environment
+
 ```bash
 # Clone repository ini (atau buka folder projek)
 cd /path/to/emotiondetectionv2
 
-# Buat virtual environment (opsional namun disarankan)
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# venv\Scripts\activate   # Windows
+# Buat virtual environment di direktori Home (Disarankan untuk pengguna Linux/Ubuntu)
+python3 -m venv ~/venv_emotion
+
+# Aktifkan virtual environment
+source ~/venv_emotion/bin/activate  # Linux/macOS
+# venv\Scripts\activate            # Windows
 ```
 
 ### 3. Install Dependensi
 ```bash
 pip install -r requirements.txt
 ```
-
-*Kebutuhan Paket*: `streamlit`, `torch`, `transformers`, `huggingface_hub`, `pandas`, `plotly`, `datasets`, `scikit-learn`, `seaborn`, `youtube-comment-downloader`.
 
 ### 4. Jalankan Aplikasi Streamlit
 ```bash
