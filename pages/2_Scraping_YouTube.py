@@ -11,7 +11,8 @@ from ui_components import (
     render_header,
     render_model_selector,
     get_emotion_badge,
-    EMOTION_COLORS
+    EMOTION_COLORS,
+    preprocess_text
 )
 
 # ===============================
@@ -36,7 +37,6 @@ render_header(
 # ===============================
 selected_version = render_model_selector(sidebar=False, key="scrape_model_select")
 
-# Pembatas Garis Tipis yang Elegan
 st.markdown('<hr style="border:0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0 24px 0;">', unsafe_allow_html=True)
 
 # ===============================
@@ -50,7 +50,14 @@ label_map = ["Marah", "Sedih", "Senang", "Takut", "Terkejut", "Netral"]
 # PREDICT FUNCTION
 # ===============================
 def predict(text):
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=256)
+    clean_text = preprocess_text(text)
+    inputs = tokenizer(
+        clean_text if clean_text else text,
+        return_tensors="pt",
+        truncation=True,
+        padding=True,
+        max_length=256
+    )
     with torch.no_grad():
         outputs = model(**inputs)
 

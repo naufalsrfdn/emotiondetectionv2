@@ -9,7 +9,8 @@ from ui_components import (
     render_header,
     render_model_selector,
     get_emotion_badge,
-    EMOTION_COLORS
+    EMOTION_COLORS,
+    preprocess_text
 )
 
 # ===============================
@@ -40,7 +41,6 @@ render_header(
 # ===============================
 selected_version = render_model_selector(sidebar=False, key="app_model_select")
 
-# Pembatas Garis Tipis yang Elegan
 st.markdown('<hr style="border:0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0 24px 0;">', unsafe_allow_html=True)
 
 # ===============================
@@ -52,8 +52,11 @@ tokenizer, model, model_name = load_model(selected_version)
 # PREDICT FUNCTION
 # ===============================
 def predict_all_probs(text):
+    # Preprocessing Teks (Case Folding & Text Cleaning) Sesuai Skripsi
+    clean_text = preprocess_text(text)
+    
     inputs = tokenizer(
-        text,
+        clean_text if clean_text else text,
         return_tensors="pt",
         truncation=True,
         padding=True,

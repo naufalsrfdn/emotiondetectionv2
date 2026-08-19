@@ -1,6 +1,32 @@
 import streamlit as st
 import os
+import re
 import load_model
+
+# ==========================================
+# PREPROCESSING TEKS (SESUAI SKRIPSI BAB 3 & 4)
+# ==========================================
+def preprocess_text(text):
+    """
+    Fungsi Preprocessing Teks sesuai Skripsi:
+    1. Case Folding: Mengubah seluruh huruf menjadi lowercase
+    2. Text Cleaning: Menghapus URL, angka, emoji, tanda baca, dan spasi berlebih
+    """
+    if not text or not isinstance(text, str):
+        return ""
+    
+    # 1. Case Folding
+    text = text.lower()
+    
+    # 2. Text Cleaning
+    # Hapus URL (http/https/www)
+    text = re.sub(r'http\S+|www\S+', '', text)
+    # Hapus angka, tanda baca, emoji (hanya menyisakan huruf a-z dan spasi)
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    # Hapus spasi berlebih
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    return text
 
 # ==========================================
 # EMOTION COLOR DEFINITIONS
