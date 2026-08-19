@@ -36,11 +36,12 @@ render_header(
 )
 
 # ===============================
-# MAIN PAGE MODEL SELECTOR (BUKAN SIDEBAR)
+# MAIN PAGE MODEL SELECTOR
 # ===============================
-st.markdown('<div class="custom-card">', unsafe_allow_html=True)
 selected_version = render_model_selector(sidebar=False, key="app_model_select")
-st.markdown('</div>', unsafe_allow_html=True)
+
+# Pembatas Garis Tipis yang Elegan
+st.markdown('<hr style="border:0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0 24px 0;">', unsafe_allow_html=True)
 
 # ===============================
 # LOAD SELECTED MODEL
