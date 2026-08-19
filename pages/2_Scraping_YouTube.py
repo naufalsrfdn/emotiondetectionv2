@@ -25,21 +25,23 @@ st.set_page_config(
 
 apply_custom_styles()
 
+render_header(
+    title="YouTube Scraper & Prediksi Emosi",
+    subtitle="Pengambilan komentar otomatis dari YouTube dan klasifikasi emosi menggunakan model IndoBERT lokal.",
+    icon="📥"
+)
+
 # ===============================
-# SIDEBAR MODEL SELECTOR
+# MAIN PAGE MODEL SELECTOR (BUKAN SIDEBAR)
 # ===============================
-selected_version = render_model_selector(sidebar=True, key="scrape_model_select")
+st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+selected_version = render_model_selector(sidebar=False, key="scrape_model_select")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ===============================
 # LOAD MODEL BASED ON SELECTION
 # ===============================
 tokenizer, model, model_name = load_model(selected_version)
-
-render_header(
-    title="YouTube Scraper & Prediksi Emosi",
-    subtitle=f"Pengambilan komentar otomatis dari YouTube dan klasifikasi emosi menggunakan model <b>{model_name}</b>.",
-    icon="📥"
-)
 
 label_map = ["Marah", "Sedih", "Senang", "Takut", "Terkejut", "Netral"]
 
@@ -85,9 +87,6 @@ def scrape(url, limit):
 
     return data
 
-# ===============================
-# PARSE TANGGAL AMAN
-# ===============================
 def parse_date(date_raw):
     if isinstance(date_raw, str):
         try:
@@ -104,11 +103,7 @@ def parse_date(date_raw):
 # ===============================
 # UI CONFIGURATION CARD
 # ===============================
-st.markdown("""
-    <div class="custom-card">
-        <h3 style="margin-top:0; font-size:1.15rem; color:#f8fafc;">⚙️ Pengaturan Scraping</h3>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown('<div class="custom-card"><h3 style="margin-top:0; font-size:1.15rem; color:#f8fafc;">⚙️ Pengaturan Scraping</h3></div>', unsafe_allow_html=True)
 
 col_mode, col_num = st.columns([1, 1], gap="medium")
 
@@ -126,9 +121,6 @@ with col_d2:
 
 STUDI_KASUS_URL = "https://www.youtube.com/watch?v=gpHLhjkMR0E"
 
-# ===============================
-# SCRAPING LOGIC
-# ===============================
 target_url = None
 if mode == "Studi Kasus Preset":
     st.info(f"📌 **Video Studi Kasus**: `{STUDI_KASUS_URL}` (Diskusi Publik / Demo Rusuh)")
@@ -162,7 +154,6 @@ if st.button(btn_label, type="primary"):
         date_raw = c.get("time_parsed") or c.get("time")
         date_obj = parse_date(date_raw)
 
-        # Filter tanggal jika dipilih
         if date_obj and tanggal_mulai and tanggal_selesai:
             if not (tanggal_mulai <= date_obj <= tanggal_selesai):
                 progress_bar.progress((i + 1) / len(comments))
