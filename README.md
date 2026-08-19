@@ -97,7 +97,6 @@ emotiondetectionv2/
 ├── emotion.db                  # Database SQLite penampung hasil prediksi & validasi
 ├── requirements.txt            # Package dependencies
 ├── .gitignore                  # Aturan ignore file model berat & cache Git
-├── .github/                    # Konfigurasi repositori GitHub
 ├── model_versions/             # Direktori penampung versi model lokal (v1, v2, dll.)
 │   ├── active.txt              # Penanda versi model aktif saat ini
 │   └── v1/                     # Folder bobot & konfigurasi model versi 1
@@ -108,23 +107,6 @@ emotiondetectionv2/
 │   ├── 4_Validasi.py           # Interface validasi label emosi (Human-in-the-loop)
 │   └── 5_Training_Ulang_Model.py # Fitur Incremental Learning & Evaluasi
 └── DRAF SKRIPSI NAUFAL SYARIFUDDIN-INFORMATIKA.pdf # Dokumen Laporan Skripsi Lengkap
-```
-
----
-
-## 🛠️ Skema Database (`emotion.db`)
-
-Tabel Utama: `hasil_prediksi`
-
-```sql
-CREATE TABLE IF NOT EXISTS hasil_prediksi (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    komentar TEXT,
-    emosi TEXT,
-    confidence REAL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    label_benar TEXT
-);
 ```
 
 ---
@@ -154,7 +136,13 @@ source ~/venv_emotion/bin/activate  # Linux/macOS
 pip install -r requirements.txt
 ```
 
-### 4. Jalankan Aplikasi Streamlit
+### 4. 💾 Download Model Versi Pertama (v1)
+Karena bobot file model tidak di-commit ke GitHub demi menghemat kuota repositori, Anda dapat mengunduh model versi pertama (`v1`) yang sudah di-fine tune dari Google Drive:
+- 🔗 **Link Download Model v1**: [Google Drive Folder Model v1](https://drive.google.com/drive/folders/1o9Qbsd_IUDAWX5OnDN_SHKHFMhrXgrsC)
+
+> **Petunjuk**: Setelah diunduh, ekstrak/masukkan folder `v1` ke dalam direktori `model_versions/v1/` pada proyek ini.
+
+### 5. Jalankan Aplikasi Streamlit
 ```bash
 streamlit run app.py
 ```
